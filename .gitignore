@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+weather_forecast_ui/build/
+weather_forecast_ui/.dart_tool/
+weather_forecast_ui/.flutter-plugins-dependencies
