@@ -87,6 +87,11 @@ app.post("/api/forecast", async (req: Request, res: Response) => {
     const id = sessionId ?? randomUUID();
 
     const sessionKey = `${userId}:${id}`;
+    console.log("Session Debug:", {
+    sessionId: id,
+    userId: userId.slice(0, 12),
+    existingMemory: sessions.has(sessionKey)
+});
 
     let memory = sessions.get(sessionKey);
 
