@@ -20,7 +20,7 @@ export async function getLocation(
     city: string
 ): Promise<LocationData> {
 
-    const requestedCity = city.split(",")[0].trim();
+    const requestedCity = city.split(",")[0]?.trim() ?? "";
 
     if (!requestedCity) {
         throw new Error("City name is required.");
@@ -102,6 +102,13 @@ export async function getLocation(
     }
 
     const result = matches[0];
+
+    if (!result) {
+    throw new Error(
+        `Location "${city}" could not be resolved.`
+        );
+    }
+    
 
     return {
         name: result.name,
