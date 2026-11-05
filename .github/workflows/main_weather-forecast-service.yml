@@ -60,6 +60,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+
+      - name: Verify downloaded files
+        run: |
+          echo "Current directory:"
+          pwd
+
+          echo "Deployment files:"
+          ls -la
+
+          echo "Checking required files:"
+          test -f package.json
+          test -f dist/server.js
+          test -d node_modules
+
+          echo "Deployment files verified successfully"
       
       - name: Login to Azure
         uses: azure/login@v2
