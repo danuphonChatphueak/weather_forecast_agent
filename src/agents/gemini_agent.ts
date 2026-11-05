@@ -77,57 +77,41 @@ export async function runAgent(
             }
 
 
+                        
             try {
                 let toolResult;
-
-                 console.log("Gemini Tool Call:", {
-                        toolName: call.name,
-                        arguments: call.args
-                    });
-
+            
+                console.log("Gemini Tool Call:", {
+                    toolName: call.name,
+                    arguments: call.args
+                });
+            
                 if (
                     call.name === "savePreferredCity" ||
                     call.name === "getPreferredCity"
                 ) {
-                    // Memory Tool
                     toolResult = await executionMemoryTool(
                         call.name,
                         call.args ?? {},
                         userId
-                        
                     );
-                
-                       
-
                 } else {
-                    // Weather Tool
                     toolResult = await toolExecutor.execute(
                         call.name,
                         call.args ?? {}
                     );
                 }
+            
+                // Log successful weather tool execution
                 if (call.name === "getWeatherForecastForCity") {
-                    console.log("Weather Tool Result:", {
+                    console.log("Weather Tool Success:", {
+                        requestedCity: call.args?.city,
                         location: toolResult?.location,
                         hasCurrent: Boolean(toolResult?.weather?.current),
-                        forecastDays: toolResult?.weather?.daily?.length,
-                        error: toolResult?.error
+                        forecastDays: toolResult?.weather?.daily?.length
                     });
                 }
-                   console.log("Weather Tool Result:", {
-                    toolName: call.name,
-                    city: call.args?.city,
-                    returnedType: typeof toolResult,
-                    resultPreview: typeof toolResult === "string"
-                        ? toolResult.slice(0, 300)
-                        : JSON.stringify(toolResult)?.slice(0, 300)
-                });
-
-                console.log("Tool Execution Result:", {
-                    toolName: call.name,
-                    result: toolResult
-                });
-
+            
                 // Send result back to Gemini
                 functionResponseParts.push({
                     functionResponse: {
@@ -138,10 +122,18 @@ export async function runAgent(
                         }
                     }
                 });
-
+            
             } catch (error) {
-                console.error("Tool execution failed:", call.name, error);
-
+                console.error("Tool Execution Failed:", {
+                    toolName: call.name,
+                    requestedCity: call.name === "getWeatherForecastForCity"
+                        ? call.args?.city
+                        : undefined,
+                    error: error instanceof Error
+                        ? error.message
+                        : String(error)
+                });
+            
                 functionResponseParts.push({
                     functionResponse: {
                         name: call.name,
@@ -154,7 +146,6 @@ export async function runAgent(
                     }
                 });
             }
-        }
 
         const toolResponse: Content = {
             role: "user",
