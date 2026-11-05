@@ -78,16 +78,16 @@ jobs:
       
       - name: Login to Azure
         uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9AF03AEA0C12463C9E2DDA010E23F622 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_355A458E67C94E638575D1FB2588D6AF }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_736C95AC379945CFB2BE9DC15AF5DE6A }}
+        with: 
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CF4ADE887ED6493FAFF9C668D9FB85CD }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13FC545B76E34020B892376AF676BBC4 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1A0C4E7456B14A4D8A4B4E718070DCCE }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'weather-forecast-service'
+          app-name: 'WeatherForecastAgent-service'
           slot-name: 'Production'
           package: .
           
