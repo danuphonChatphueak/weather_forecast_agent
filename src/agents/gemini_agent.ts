@@ -115,6 +115,11 @@ export async function runAgent(
                         : JSON.stringify(toolResult)?.slice(0, 300)
                 });
 
+                console.log("Tool Execution Result:", {
+                    toolName: call.name,
+                    result: toolResult
+                });
+
                 // Send result back to Gemini
                 functionResponseParts.push({
                     functionResponse: {
