@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'api.dart';
 
 void main() {
@@ -134,9 +135,24 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
                             color: isUser ? Colors.blue : Colors.grey,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          child: Text(
-                            _messages[index],
-                            style: TextStyle(color: Colors.white),
+                          child: MarkdownBody(
+                            data: message,
+                            selectable: true,
+                            styleSheet: MarkdownStyleSheet(
+                              p: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 1.5,
+                              ),
+                              strong: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              listBullet: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
                         ),
                       ),
