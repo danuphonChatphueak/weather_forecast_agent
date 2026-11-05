@@ -106,6 +106,14 @@ export async function runAgent(
                         call.args ?? {}
                     );
                 }
+                if (call.name === "getWeatherForecastForCity") {
+                    console.log("Weather Tool Result:", {
+                        location: toolResult?.location,
+                        hasCurrent: Boolean(toolResult?.weather?.current),
+                        forecastDays: toolResult?.weather?.daily?.length,
+                        error: toolResult?.error
+                    });
+                }
                    console.log("Weather Tool Result:", {
                     toolName: call.name,
                     city: call.args?.city,
