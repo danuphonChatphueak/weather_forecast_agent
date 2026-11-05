@@ -91,6 +91,10 @@ export async function runAgent(
                         userId
                         
                     );
+                        console.log("Gemini Tool Call:", {
+                        toolName: call.name,
+                        arguments: call.args
+                    });
 
                 } else {
                     // Weather Tool
