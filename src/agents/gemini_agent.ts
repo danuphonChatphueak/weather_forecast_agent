@@ -147,6 +147,15 @@ export async function runAgent(
             systemPrompt,
             functionDeclarations
         );
+
+        console.log("Weather Tool Result:", {
+            toolName: call.name,
+            city: call.args?.city,
+            returnedType: typeof toolResult,
+            resultPreview: typeof toolResult === "string"
+                ? toolResult.slice(0, 300)
+                : JSON.stringify(toolResult)?.slice(0, 300)
+        });
     }
 
     throw new Error("Agent stopped unexpectedly.");
