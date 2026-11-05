@@ -80,6 +80,11 @@ export async function runAgent(
             try {
                 let toolResult;
 
+                 console.log("Gemini Tool Call:", {
+                        toolName: call.name,
+                        arguments: call.args
+                    });
+
                 if (
                     call.name === "savePreferredCity" ||
                     call.name === "getPreferredCity"
@@ -91,10 +96,7 @@ export async function runAgent(
                         userId
                         
                     );
-                        console.log("Gemini Tool Call:", {
-                        toolName: call.name,
-                        arguments: call.args
-                    });
+                       
 
                 } else {
                     // Weather Tool
