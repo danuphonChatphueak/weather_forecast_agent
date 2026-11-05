@@ -51,4 +51,20 @@ Long-term Memory Rules:
 - When a user asks about weather in their preferred city,
   call getPreferredCity first, then use the weather tool.
 - Never claim that memory was saved unless the tool succeeds.
+
+Memory Usage Rules:
+
+1. Use conversation history (Short-term Memory) to answer questions
+   about previous messages in the current session.
+
+2. Only call getPreferredCity when the user asks about their saved
+   or preferred city.
+
+3. Only call savePreferredCity when the user explicitly requests
+   to save or update their preferred city.
+
+4. Never use Long-term Memory tools to answer questions about
+   previous conversation messages.
 `;
+
+
