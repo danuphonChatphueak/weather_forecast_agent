@@ -161,7 +161,7 @@ export async function runAgent(
             functionDeclarations
         );
 
-     
+        }
     }
 
     throw new Error("Agent stopped unexpectedly.");
