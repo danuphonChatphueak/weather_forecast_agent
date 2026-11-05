@@ -15,7 +15,25 @@ export class ToolExecutor {
         if (!tool) {
             throw new Error(`Tool "${name}" not found.`);
         }
+        try {
+                    const result = await tool.execute(args);
+        
+                    console.log("ToolExecutor completed:", {
+                        toolName: name,
+                        hasResult: result != null
+                    });
+        
+                    return result;
+        
+                } catch (error) {
+                    console.error("ToolExecutor failed:", {
+                        toolName: name,
+                        error: error instanceof Error
+                            ? error.message
+                            : String(error)
+                    });
 
-        return await tool.execute(args);
+            throw error;
+        }
     }
 }
