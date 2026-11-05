@@ -1,10 +1,17 @@
 
-import { generateResponseWithTools, generateResponseWithFunctionResult } from "../models/client.js";
+import {
+    generateResponseWithTools,
+    generateResponseWithFunctionResult
+} from "../models/client.js";
+
 import { ToolRegistry } from "../tools/tool_registry.js";
 import { ToolExecutor } from "../tools/tool_excute.js";
 import { weatherTool } from "../tools/tool_weather_definition.js";
 import { weatherFunctionDeclaration } from "../tools/weather_function_declaration.js";
-import { memoryFunctionalDeclarations, executionMemoryTool } from "../tools/memory_tools.js";
+import {
+    memoryFunctionalDeclarations,
+    executionMemoryTool
+} from "../tools/memory_tools.js";
 import { ShortTermMemory } from "../memory/short_term_memory.js";
 import { systemPrompt } from "../system_prompt.js";
 import type { Content, Part } from "@google/genai";
@@ -14,11 +21,11 @@ export async function runAgent(
     memory: ShortTermMemory,
     userId: string
 ): Promise<string> {
-
     const registry = new ToolRegistry();
     registry.register(weatherTool);
 
     const toolExecutor = new ToolExecutor(registry);
+
     const functionDeclarations = [
         weatherFunctionDeclaration,
         ...memoryFunctionalDeclarations
@@ -36,7 +43,6 @@ export async function runAgent(
         systemPrompt,
         functionDeclarations
     );
-
     const maxIterations = 5;
 
     for (let iteration = 0; iteration <= maxIterations; iteration++) {
@@ -50,12 +56,16 @@ export async function runAgent(
         const functionCalls = response.functionCalls;
 
         if (functionCalls.length === 0) {
+
             const answer = response.candidateContent.parts
                 ?.map(part => part.text ?? "")
                 .join("")
                 .trim() ?? "";
 
-            console.log("Gemini final answer:", JSON.stringify(answer));
+            console.log(
+                "Gemini final answer:",
+                JSON.stringify(answer)
+            );
 
             if (!answer) {
                 throw new Error("Gemini returned an empty response.");
@@ -76,43 +86,45 @@ export async function runAgent(
                 throw new Error("Function call name is missing.");
             }
 
-
-                        
             try {
                 let toolResult;
-            
+
                 console.log("Gemini Tool Call:", {
                     toolName: call.name,
                     arguments: call.args
                 });
-            
+
                 if (
                     call.name === "savePreferredCity" ||
                     call.name === "getPreferredCity"
                 ) {
+
                     toolResult = await executionMemoryTool(
                         call.name,
                         call.args ?? {},
                         userId
                     );
+
                 } else {
+
                     toolResult = await toolExecutor.execute(
                         call.name,
                         call.args ?? {}
                     );
                 }
-            
-                // Log successful weather tool execution
+
                 if (call.name === "getWeatherForecastForCity") {
+
                     console.log("Weather Tool Success:", {
                         requestedCity: call.args?.city,
                         location: toolResult?.location,
-                        hasCurrent: Boolean(toolResult?.weather?.current),
-                        forecastDays: toolResult?.weather?.daily?.length
+                        hasCurrent: Boolean(
+                            toolResult?.weather?.current
+                        ),
+                        forecastDays:
+                            toolResult?.weather?.daily?.length
                     });
                 }
-            
-                // Send result back to Gemini
                 functionResponseParts.push({
                     functionResponse: {
                         name: call.name,
@@ -122,18 +134,18 @@ export async function runAgent(
                         }
                     }
                 });
-            
+
             } catch (error) {
                 console.error("Tool Execution Failed:", {
                     toolName: call.name,
-                    requestedCity: call.name === "getWeatherForecastForCity"
-                        ? call.args?.city
-                        : undefined,
+                    requestedCity:
+                        call.name === "getWeatherForecastForCity"
+                            ? call.args?.city
+                            : undefined,
                     error: error instanceof Error
                         ? error.message
                         : String(error)
                 });
-            
                 functionResponseParts.push({
                     functionResponse: {
                         name: call.name,
@@ -147,6 +159,7 @@ export async function runAgent(
                 });
             }
 
+        } 
         const toolResponse: Content = {
             role: "user",
             parts: functionResponseParts
@@ -154,15 +167,13 @@ export async function runAgent(
 
         memory.addMessage(toolResponse);
 
-        // 8. Send updated history to LLM
         response = await generateResponseWithFunctionResult(
             memory.getHistory(),
             systemPrompt,
             functionDeclarations
         );
 
-        }
-    }
+    } 
 
     throw new Error("Agent stopped unexpectedly.");
 }
