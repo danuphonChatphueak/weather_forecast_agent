@@ -13,11 +13,10 @@ export async function getLocation(city: string): Promise<LocationData> {
 
     url.search = new URLSearchParams({
         name: city,
-        count: "10",
+        count: "1",
         language: "en",
         format: "json"
     }).toString();
-    timeout: 10000
 
     const response = await fetch(url);
 
