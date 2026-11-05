@@ -71,9 +71,11 @@ app.post("/api/forecast", async (req: Request, res: Response) => {
     if (!/^[a-f0-9]{64}$/.test(token)) {
         token = randomBytes(32).toString("hex");
 
+        const isProduction = process.env.NODE_ENV === "production"
+
         res.cookie(cookieName, token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: isProduction, 
             sameSite: isProduction ? "none" : "lax",
             maxAge: 365 * 24 * 60 * 60 * 1000,
             path: "/"
