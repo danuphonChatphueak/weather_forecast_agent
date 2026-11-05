@@ -1,5 +1,4 @@
 
-
 interface LocationData {
     name: string;
     latitude: number;
@@ -7,108 +6,32 @@ interface LocationData {
     country: string;
 }
 
-interface GeocodingResult extends LocationData {
-    admin1?: string;
-    country_code?: string;
-}
-
-function normalizeName(name: string): string {
-    return name.trim().toLowerCase().replace(/\s+/g, " ");
-}
-
-export async function getLocation(
-    city: string
-): Promise<LocationData> {
-
-    const requestedCity = city.split(",")[0]?.trim() ?? "";
-
-    if (!requestedCity) {
-        throw new Error("City name is required.");
-    }
-
+export async function getLocation(city: string): Promise<LocationData> {
     const url = new URL(
         "https://geocoding-api.open-meteo.com/v1/search"
     );
 
     url.search = new URLSearchParams({
-        name: city.trim(),
+        name: city,
         count: "10",
         language: "en",
         format: "json"
     }).toString();
+    timeout: 10000
 
     const response = await fetch(url);
 
     if (!response.ok) {
-        throw new Error(
-            `Geocoding API error: ${response.status}`
-        );
+        throw new Error(`Geocoding API error: ${response.status}`);
     }
 
     const data = await response.json();
 
-    const results: GeocodingResult[] =
-        Array.isArray(data.results) ? data.results : [];
-
-    console.log("Geocoding Results:", results.map(place => ({
-        name: place.name,
-        country: place.country,
-        admin1: place.admin1
-    })));
-
-    if (results.length === 0) {
+    if (!data.results || data.results.length === 0) {
         throw new Error(`Location "${city}" not found.`);
     }
 
-    // Step 1: Find exact city-name matches
-    const exactMatches = results.filter(place =>
-        normalizeName(place.name) === normalizeName(requestedCity)
-    );
-
-    // Step 2: Find matching province/state names
-    const regionMatches = results.filter(place =>
-        normalizeName(place.admin1 ?? "") ===
-        normalizeName(requestedCity)
-    );
-
-    let matches = exactMatches.length > 0
-        ? exactMatches
-        : regionMatches;
-
-    // Step 3: Prefer a matching administrative center
-    if (matches.length > 1 && exactMatches.length === 0) {
-        const centerMatches = matches.filter(place =>
-            normalizeName(place.name) ===
-            normalizeName(`Mueang ${requestedCity}`)
-        );
-
-        if (centerMatches.length === 1) {
-            matches = centerMatches;
-        }
-    }
-
-    if (matches.length === 0) {
-        throw new Error(
-            `No matching location for "${city}". ` +
-            "Please specify the city and country."
-        );
-    }
-
-    if (matches.length > 1) {
-        throw new Error(
-            `Multiple locations match "${city}". ` +
-            "Please specify the country or province."
-        );
-    }
-
-    const result = matches[0];
-
-    if (!result) {
-    throw new Error(
-        `Location "${city}" could not be resolved.`
-        );
-    }
-    
+    const result = data.results[0];
 
     return {
         name: result.name,
