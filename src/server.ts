@@ -74,7 +74,7 @@ app.post("/api/forecast", async (req: Request, res: Response) => {
         res.cookie(cookieName, token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: isProduction ? "none" : "lax",
             maxAge: 365 * 24 * 60 * 60 * 1000,
             path: "/"
         });
