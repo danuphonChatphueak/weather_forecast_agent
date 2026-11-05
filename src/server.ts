@@ -14,8 +14,8 @@ const port = Number(process.env.PORT) || 3000;
 app.use(json({ limit: "1mb" }));
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    "https://delightful-rock-0463fbb00.3.azurestaticapps.net",
+    origin: ["http://localhost:5173",
+    "https://delightful-rock-0463fbb00.3.azurestaticapps.net"],
     credentials: true
 }));
 
