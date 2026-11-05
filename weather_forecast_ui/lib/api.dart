@@ -5,7 +5,6 @@ class WeatherApi {
   final BrowserClient _client = BrowserClient()..withCredentials = true;
 
   final String baseUrl = 'https://weather-forecast-service-a2bpakb5esddhag7.eastasia-01.azurewebsites.net';
-
   Future<Map<String, dynamic>> sendMessage({
     required String message,
     String? sessionId,
