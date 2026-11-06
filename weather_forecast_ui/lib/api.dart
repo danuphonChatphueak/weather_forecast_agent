@@ -4,7 +4,7 @@ import 'package:http/browser_client.dart';
 class WeatherApi {
   final BrowserClient _client = BrowserClient()..withCredentials = true;
 
-  final String baseUrl = 'https://weatherforecastagent-service-fyhtapbjhagnhye7.malaysiawest-01.azurewebsites.net/';
+  final String baseUrl = 'https://weather-forecast-agent.onrender.com';
   Future<Map<String, dynamic>> sendMessage({
     required String message,
     String? sessionId,
