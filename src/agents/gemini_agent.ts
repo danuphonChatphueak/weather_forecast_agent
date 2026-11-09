@@ -1,20 +1,13 @@
 
-import {
-    generateResponseWithTools,
-    generateResponseWithFunctionResult
-} from "../models/client.js";
-
-import { ToolRegistry } from "../tools/tool_registry.js";
+import type { Content, Part } from "@google/genai";
+import { ShortTermMemory } from "../memory/short_term_memory.js";
+import { generateResponseWithFunctionResult, generateResponseWithTools } from "../service/client.js";
+import { systemPrompt } from "../system_prompt.js";
+import { executionMemoryTool, memoryFunctionalDeclarations } from "../tools/memory_tools.js";
 import { ToolExecutor } from "../tools/tool_excute.js";
+import { ToolRegistry } from "../tools/tool_registry.js";
 import { weatherTool } from "../tools/tool_weather_definition.js";
 import { weatherFunctionDeclaration } from "../tools/weather_function_declaration.js";
-import {
-    memoryFunctionalDeclarations,
-    executionMemoryTool
-} from "../tools/memory_tools.js";
-import { ShortTermMemory } from "../memory/short_term_memory.js";
-import { systemPrompt } from "../system_prompt.js";
-import type { Content, Part } from "@google/genai";
 
 export async function runAgent(
     userMessage: string,

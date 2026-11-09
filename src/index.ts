@@ -1,9 +1,7 @@
-import { createInterface } from "node:readline/promises";
-import { generateResponse } from "./models/client.js";
 import { stdin, stdout } from "node:process";
-import { ShortTermMemory } from "./memory/short_term_memory.js";
+import { createInterface } from "node:readline/promises";
 import { runAgent } from "./agents/gemini_agent.js";
-import { getLocation, getWeatherForecast } from "./tools/weather_tools.js";
+import { ShortTermMemory } from "./memory/short_term_memory.js";
 
 
 
