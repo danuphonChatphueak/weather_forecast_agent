@@ -7,7 +7,7 @@ const weatherAgent = new Agent({
   keepAliveTimeout: 10_000,
   keepAliveMaxTimeout: 30_000,
   connect: {
-    timeout: 10_000
+    timeout: 6_000
   }
 });
 
